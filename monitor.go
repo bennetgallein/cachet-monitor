@@ -27,6 +27,7 @@ type MonitorInterface interface {
 type AbstractMonitor struct {
 	Name   string
 	Target string
+	Active bool
 
 	// (default)http / dns
 	Type   string
@@ -107,10 +108,17 @@ func (mon *AbstractMonitor) Describe() []string {
 		features = append(features, "Name: "+mon.Name)
 	}
 
+	if !mon.Active {
+		features = append(features, "Active: No")
+	}
+
 	return features
 }
 
 func (mon *AbstractMonitor) ClockStart(cfg *CachetMonitor, iface MonitorInterface, wg *sync.WaitGroup) {
+	if !mon.Active {
+		return
+	};
 	wg.Add(1)
 	mon.config = cfg
 	mon.stopC = make(chan bool)

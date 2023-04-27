@@ -5,9 +5,9 @@
     "insecure": false
   },
   "date_format": "02/01/2006 15:04:05 MST",
-  "slack_webhook": "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
   "monitors": [
     {
+      "active": false,
       "name": "google",
       "target": "https://google.com",
       "strict": true,
@@ -33,35 +33,39 @@
       "expected_body": "P.*NG"
     },
     {
-      "name": "dns",
-      "target": "matej.me.",
-      "question": "mx",
       "type": "dns",
+      "active": true,
+      "name": "dns",
+      "target": "opnsense.bennetg.dev.",
+      "question": "a",
       "component_id": 2,
       "interval": 1,
       "timeout": 1,
-      "dns": "8.8.4.4:53",
+      "dns": "10.0.0.60:53",
       "answers": [
         {
-          "regex": "[1-9] alt[1-9].aspmx.l.google.com."
-        },
-        {
-          "exact": "10 aspmx2.googlemail.com."
-        },
-        {
-          "exact": "1 aspmx.l.google.com."
-        },
-        {
-          "exact": "10 aspmx3.googlemail.com."
+          "exact": "10.0.0.1"
         }
       ]
     },
     {
-      "name": "IN-Ulm IRC",
-      "target": "irc.in-ulm.de",
       "type": "tcp",
-      "port": "6660",
+      "name": "TCP",
+      "active": false,
+      "target": "10.0.0.1",
+      "interval": 10,
+      "timeout": 1,
+      "port": "443",
       "component_id": 4
+    },
+    {
+      "active": true,
+      "type": "icmp",
+      "name": "icmp",
+      "target": "10.0.0.1",
+      "component_id": 4,
+      "interval": 10,
+      "timeout": 3
     }
   ]
 }
