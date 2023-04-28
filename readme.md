@@ -2,16 +2,16 @@
 
 ## Features
 
-- :heavy_check_mark: Interval based checking of predefined Resources
-- :heavy_check_mark: Posts monitor lag to cachet graphs
-- :heavy_check_mark: Creates & Resolves Incidents
-- :heavy_check_mark: Updates Component to Partial Outage
-- :heavy_check_mark: Updates Component to Major Outage if already in Partial Outage (works with distributed monitors)
-- :heavy_check_mark: Can be run on multiple servers and geo regions
-- :heavy_check_mark: HTTP Checks (body/status code)
-- :heavy_check_mark: DNS Checks
-- :heavy_check_mark: TCP Checks
-- :heavy_check_mark: ICMP Checks
+:heavy_check_mark: Interval based checking of predefined Resources
+:heavy_check_mark: Posts monitor lag to cachet graphs
+:heavy_check_mark: Creates & Resolves Incidents
+:heavy_check_mark: Updates Component to Partial Outage
+:heavy_check_mark: Updates Component to Major Outage if already in Partial Outage (works with distributed monitors)
+:heavy_check_mark: Can be run on multiple servers and geo regions
+:heavy_check_mark: HTTP Checks (body/status code)
+:heavy_check_mark: DNS Checks
+:heavy_check_mark: TCP Checks
+:heavy_check_mark: ICMP Checks
 
 ## Quick Start
 
