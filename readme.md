@@ -2,105 +2,66 @@
 
 ## Features
 
-- [x] Creates & Resolves Incidents
-- [x] Posts monitor lag to cachet graphs
-- [x] HTTP Checks (body/status code)
-- [x] DNS Checks
-- [x] Updates Component to Partial Outage
-- [x] Updates Component to Major Outage if already in Partial Outage (works with distributed monitors)
-- [x] Can be run on multiple servers and geo regions
+- :heavy_check_mark: Interval based checking of predefined Resources
+- :heavy_check_mark: Posts monitor lag to cachet graphs
+- :heavy_check_mark: Creates & Resolves Incidents
+- :heavy_check_mark: Updates Component to Partial Outage
+- :heavy_check_mark: Updates Component to Major Outage if already in Partial Outage (works with distributed monitors)
+- :heavy_check_mark: Can be run on multiple servers and geo regions
+- :heavy_check_mark: HTTP Checks (body/status code)
+- :heavy_check_mark: DNS Checks
+- :heavy_check_mark: TCP Checks
+- :heavy_check_mark: ICMP Checks
 
-## Example Configuration
+## Quick Start
 
-**Note:** configuration can be in json or yaml format. [`example.config.json`](https://github.com/CastawayLabs/cachet-monitor/blob/master/example.config.json), [`example.config.yaml`](https://github.com/CastawayLabs/cachet-monitor/blob/master/example.config.yml) files.
+Configuration can be done in either yaml or json format. An example JSON-File would look something like this:
 
-```yaml
-api:
-  # cachet url
-  url: https://demo.cachethq.io/api/v1
-  # cachet api token
-  token: 9yMHsdioQosnyVK4iCVR
-  insecure: false
-# https://golang.org/src/time/format.go#L57
-date_format: 02/01/2006 15:04:05 MST
-slack_webhook: https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
-monitors:
-  # http monitor example
-  - name: google
-    # test url
-    target: https://google.com
-    # strict certificate checking for https
-    strict: true
-    # HTTP method
-    method: POST
-
-    # set to update component (either component_id or metric_id are required)
-    component_id: 1
-    # set to post lag to cachet metric (graph)
-    metric_id: 4
-
-    # custom templates (see readme for details)
-    # leave empty for defaults
-    template:
-      investigating:
-        subject: "{{ .Monitor.Name }} - {{ .SystemName }}"
-        message: "{{ .Monitor.Name }} check **failed** (server time: {{ .now }})\n\n{{ .FailReason }}"
-      fixed:
-        subject: "I HAVE BEEN FIXED"
-
-    # seconds between checks
-    interval: 1
-    # seconds for timeout
-    timeout: 1
-    # If % of downtime is over this threshold, open an incident
-    threshold: 80
-    # Raw data to transmit
-    data: "{\"key\":\"value\"}"
-    # custom HTTP headers
-    headers:
-      Authorization: Basic <hash>
-    # expected status code (either status code or body must be supplied)
-    expected_status_code: 200
-    # regex to match body
-    expected_body: "P.*NG"
-    # expected body response md5 checksum
-    expected_md5sum: "<md5sum>"
-    # expected body response length
-    expected_length: 12345
-  # dns monitor example
-  - name: dns
-    # fqdn
-    target: matej.me.
-    # question type (A/AAAA/CNAME/...)
-    question: mx
-    type: dns
-    # set component_id/metric_id
-    component_id: 2
-    # poll every 1s
-    interval: 1
-    timeout: 1
-    # custom DNS server (defaults to system)
-    dns: 8.8.4.4:53
-    answers:
-      # exact/regex check
-      - regex: [1-9] alt[1-9].aspmx.l.google.com.
-      - exact: 10 aspmx2.googlemail.com.
-      - exact: 1 aspmx.l.google.com.
-      - exact: 10 aspmx3.googlemail.com.
-  # example tcp
-  - name: smtpnine
-    target: smtp.nine.ch
-    type: tcp
-    port: 25
-    component_id: 4
+```json
+{
+  "api": {
+    "url": "https://demo.cachethq.io/api/v1",
+    "token": "9yMHsdioQosnyVK4iCVR",
+    "insecure": false
+  },
+  "date_format": "02/01/2006 15:04:05 MST",
+  "monitors": [
+    {
+      "active": false,
+      "name": "google",
+      "target": "https://google.com",
+      "strict": true,
+      "method": "POST",
+      "component_id": 1,
+      "metric_id": 4,
+      "template": {
+        "investigating": {
+          "subject": "{{ .Monitor.Name }} - {{ .SystemName }}",
+          "message": "{{ .Monitor.Name }} check **failed** (server time: {{ .now }})\n\n{{ .FailReason }}"
+        },
+        "fixed": {
+          "subject": "I HAVE BEEN FIXED"
+        }
+      },
+      "interval": 1,
+      "timeout": 1,
+      "threshold": 80,
+      "headers": {
+        "Authorization": "Basic <hash>"
+      },
+      "expected_status_code": 200,
+      "expected_body": "P.*NG"
+    }
+  ]
+}
 ```
 
 ## Installation
 
-1. Download binary from [release page](https://github.com/CastawayLabs/cachet-monitor/releases)
+1. Download binary from [release page](https://github.com/bennetgallein/cachet-monitor/releases)
 2. Add the binary to an executable path (/usr/bin, etc.)
 3. Create a configuration following provided examples
-4. `cachet-monitor -c /etc/cachet-monitor.yaml`
+4. `cachet-monitor -c /etc/cachet-monitor.json`
 
 pro tip: run in background using `nohup cachet-monitor 2>&1 > /var/log/cachet-monitor.log &`, or use a tmux/screen session
 
@@ -133,7 +94,7 @@ Environment varaibles:
 
 ## Init script
 
-If your system is running systemd (like Debian, Ubuntu 16.04, Fedora, RHEL7, or Archlinux) you can use the provided example file: [example.cachet-monitor.service](https://github.com/CastawayLabs/cachet-monitor/blob/master/example.cachet-monitor.service).
+If your system is running systemd (like Debian, Ubuntu 16.04, Fedora, RHEL7, or Archlinux) you can use the provided example file: [example.cachet-monitor.service](https://github.com/bennetgallein/cachet-monitor/blob/master/example.cachet-monitor.service).
 
 1. Simply put it in the right place with `cp example.cachet-monitor.service /etc/systemd/system/cachet-monitor.service`
 2. Then do a `systemctl daemon-reload` in your terminal to update Systemd configuration
@@ -146,22 +107,82 @@ This package makes use of [`text/template`](https://godoc.org/text/template). [D
 The following variables are available:
 
 | Root objects  | Description                         |
-| ------------- | ------------------------------------|
+| ------------- | ----------------------------------- |
 | `.SystemName` | system name                         |
 | `.API`        | `api` object from configuration     |
 | `.Monitor`    | `monitor` object from configuration |
 | `.now`        | formatted date string               |
 
-| Monitor variables  |
-| ------------------ |
-| `.Name`            |
-| `.Target`          |
-| `.Type`            |
-| `.Strict`          |
-| `.MetricID`        |
-| ...                |
+| Monitor variables |
+| ----------------- |
+| `.Name`           |
+| `.Target`         |
+| `.Type`           |
+| `.Strict`         |
+| `.MetricID`       |
+| ...               |
 
 All monitor variables are available from `monitor.go`
+
+## Monitor Types
+
+We support a variety of monitor-types. Here are the configuration parameters for each of them
+
+Also, the following parameters are shared for all monitors.
+
+| Key                     | Description                                                                    |
+| ----------------------- | ------------------------------------------------------------------------------ |
+| name                    | a friendly name for the monitor                                                |
+| target                  | target for the check (e.g. a domain or IP)                                     |
+| active                  | a boolean wether or not this test is currently active                          |
+| type                    | type type of the check, see supported types above or below                     |
+| interval                | the interval in seconds in which to check the monitor                          |
+| timeout                 | the timeout for each check. Needs to be smaller than the interval              |
+| metric_id               | the ID of the metric. Metrics are used for graphing values                     |
+| component_id            | the ID of the component inside of Cachet. Used for creating incidents          |
+| templates.investigating | template to use as a message for when the check enters the investigating stage |
+| templates.fixed         | template to use as a message for when the check enters the fixed stage         |
+| threshold               | If % of downtime is over this threshold, open an incident                      |
+| threshold_count         | the number of checks that count into the threshold (defaults to 10)            |
+
+### HTTP
+
+Either expected_body or expected_status_code needs to be set.
+
+| Key                  | Description                                                                                 |
+| -------------------- | ------------------------------------------------------------------------------------------- |
+| method               | the HTTP Request method to use (Defaults to GET)                                            |
+| headers              | a key-value array of additional headers to use for the request                              |
+| expected_status_code | the expected status-code returned from the request                                          |
+| expected_body        | a regex or normal string that will be used to test against the returned body of the request |
+| expected_md5sum      | a md5 checksum of the body, which will be checked against                                   |
+| expected_length      | the length of the string of the response body                                               |
+| data                 | body-data for a post request                                                                |
+
+### DNS
+
+| Key      | Description                                                                                          |
+| -------- | ---------------------------------------------------------------------------------------------------- |
+| dns      | set a custom DNS-Resolver (IP:Port format)                                                           |
+| question | the type of DNS-Request to execute (e.g. A, MX, CNAME...). Can also be a List (['A', 'MX', 'CNAME']) |
+| answers  | an array of response objects. see below                                                              |
+
+#### Answer Object
+
+| Key   | Description                                                           |
+| ----- | --------------------------------------------------------------------- |
+| regex | if you want to use a regexp, use this key and the regexp as the value |
+| exact | exact match for the response value                                    |
+
+### TCP
+
+| Key  | Description                        |
+| ---- | ---------------------------------- |
+| port | the port to do a tcp connection to |
+
+### ICMP
+
+_No special variables needed_
 
 ## Vision and goals
 
@@ -178,18 +199,12 @@ When using `cachet-monitor` as a package in another program, you should follow w
 
 # Contributions welcome
 
-We'll happily accept contributions for the following (non exhaustive list).
+We'll happily accept contributions for anything usefull.
 
-- Implement ICMP check
-- Implement TCP check
-- Any bug fixes / code improvements
-- Test cases
+# Build on Linux/MacOS
 
-# Build on MacOS
 1. Read and install with https://ahmadawais.com/install-go-lang-on-macos-with-homebrew/
-
 2. Test in console with `go get -u` and `go build cli/main.go`
-
-3. Run `./go-executable-build.sh cli/main.go`
-
-4. `mv cli/main.go-linux-amd64 cachet-monitor-linux-amd64`
+3. Run `CGO_ENABLED=1 go build cli/main.go && ./go-executable-build.sh cli/main.go`
+4. This will create a `cli/main.go-linux-amd64`-file, which is the executable binary
+5. `mv cli/main.go-linux-amd64 /usr/bin/cachet-monitor`

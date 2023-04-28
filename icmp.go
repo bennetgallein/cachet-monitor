@@ -31,21 +31,21 @@ type ICMPMonitor struct {
 // CheckICMPAlive func
 func CheckICMPAlive(ip string, timeout int) (bool, error) {
 
-	pg, err := yap.NewPinger();
+	pg, err := yap.NewPinger()
 	if err != nil {
 		defer pg.Close()
 	}
 
 	response := pg.Call(yap.Request{
-		Target: ip, 
-		Count: 1,
+		Target:  ip,
+		Count:   1,
 		Timeout: timeout * 1000})
 
 	if response.Error != nil {
 		return false, response.Error
+	} else {
+		return true, nil
 	}
-
-	return true, nil
 
 }
 
