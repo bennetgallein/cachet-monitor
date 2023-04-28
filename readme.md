@@ -19,6 +19,8 @@ a fork of the cachet-monitor project originally developed by CastawayLabs but ab
 
 Configuration can be done in either yaml or json format. An example JSON-File would look something like this:
 
+The configuration-file can also be an URL, in that case it will be downloaded from a remote server.
+
 ```json
 {
   "api": {
