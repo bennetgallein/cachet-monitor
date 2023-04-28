@@ -1,6 +1,6 @@
 cachet-monitor
 
-a fork of the cachet-monitor project originally developed by CastawayLabs but abandoned. Extended with new features
+a fork of the cachet-monitor project originally developed by CastawayLabs but abandoned. Extended with new features needed by the people.
 
 ## Features
 
