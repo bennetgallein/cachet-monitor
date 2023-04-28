@@ -60,7 +60,17 @@ Configuration can be done in either yaml or json format. An example JSON-File wo
 
 ## Installation
 
-1. Download binary from [release page](https://github.com/bennetgallein/cachet-monitor/releases)
+TL;DR:
+
+```bash
+curl https://github.com/bennetgallein/cachet-monitor/blob/master/build/cli/main.go-linux-amd64 -O /usr/bin/cachet-monitor
+curl https://github.com/bennetgallein/cachet-monitor/blob/master/example.config.json -O $PWD/cachet-config.json
+cachet-config -c $PWD/cachet-config.json
+```
+
+### Manual:
+
+1. Download binary from here: https://github.com/bennetgallein/cachet-monitor/blob/master/build/cli
 2. Add the binary to an executable path (/usr/bin, etc.)
 3. Create a configuration following provided examples
 4. `cachet-monitor -c /etc/cachet-monitor.json`
