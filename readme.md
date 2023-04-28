@@ -205,6 +205,6 @@ We'll happily accept contributions for anything usefull.
 
 1. Read and install with https://ahmadawais.com/install-go-lang-on-macos-with-homebrew/
 2. Test in console with `go get -u` and `go build cli/main.go`
-3. Run `CGO_ENABLED=1 go build cli/main.go && ./go-executable-build.sh cli/main.go`
-4. This will create a `cli/main.go-linux-amd64`-file, which is the executable binary
-5. `mv cli/main.go-linux-amd64 /usr/bin/cachet-monitor`
+3. Run `./go-executable-build.sh cli/main.go`
+4. This will create a `build/cli/main.go-linux-amd64`-file, which is the executable binary
+5. `mv build/cli/main.go-linux-amd64 /usr/bin/cachet-monitor`
